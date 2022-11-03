@@ -6,7 +6,7 @@ import numpy as np
 def loadtext():
     search_text1 = "X"
     search_text2 = "Y"
-    replace_text = "1"
+    replace_text = "2"
     with open(r'et.txt', 'r') as file:
         data = file.read()
         data = data.replace(search_text1, replace_text)
@@ -25,7 +25,7 @@ def findcommondivisor(a,b):
     else:
         return False
 
-def algorithm(matrixalgo, a,b):
+def algorithm(matrixalgo, a,b, used=[]):
 #     get the input
 #     try the one above
 #     try the one to the right
@@ -33,33 +33,43 @@ def algorithm(matrixalgo, a,b):
 #     try the one to the left
 #     return the value of the one that worked
 #     return the location of the one that worked
-    valueofcurrentcell = matrixalgo[a, b]
-    theoneabove = matrixalgo[a, b-1]
-    theoneright = matrixalgo[a+1, b]
-    theonebelow = matrixalgo[a, b+1]
-    theoneleft = matrixalgo[a-1, b]
-    resultabove = findcommondivisor(valueofcurrentcell, theoneabove)
-    resultright = findcommondivisor(valueofcurrentcell, theoneright)
-    resultbelow = findcommondivisor(valueofcurrentcell, theonebelow)
-    resultleft = findcommondivisor(valueofcurrentcell, theoneleft)
-    if resultabove == True:
-        return resultabove
-    elif resultright == True:
-        return resultright
-    elif resultbelow == True:
-        return resultbelow
-    elif resultleft == True:
-        return resultleft
+    valueofcurrentcell = int(matrixalgo[a, b])
+    if [a, b] not in used:
+        print(used)
+        theoneabove = int(matrixalgo[a, b-1])
+        theoneright = int(matrixalgo[a+1, b])
+        theonebelow = int(matrixalgo[a, b+1])
+        theoneleft = int(matrixalgo[a-1, b])
+        resultabove = findcommondivisor(valueofcurrentcell, theoneabove)
+        resultright = findcommondivisor(valueofcurrentcell, theoneright)
+        resultbelow = findcommondivisor(valueofcurrentcell, theonebelow)
+        resultleft = findcommondivisor(valueofcurrentcell, theoneleft)
+        used.append([a, b])
+        print(a,b)
+        if resultabove == True:
+            return [a, b-1]
+        elif resultright == True:
+            return [a+1, b]
+        elif resultbelow == True:
+            return [a, b+1]
+        elif resultleft == True:
+            return [a-1, b]
+    else:
+        return False
 
-def findpath(matrix,int startx,int starty,int endx,int endy):
+def findpath(matrix,startx,starty,endx,endy):
     n = False
     while n != True:
-        algorithm(matrix, startx,starty)
-        returndvalue = np.where(matrix == algorithm(matrix))[0]
+        returndvalue = algorithm(matrix, startx, starty)
+        if not returndvalue:
+            startx=5
+            starty=5
+            continue
         if returndvalue == [endx, endy]:
             n = True
         startx = returndvalue[0]
         starty = returndvalue[1]
+
 
 def main():
     results = []

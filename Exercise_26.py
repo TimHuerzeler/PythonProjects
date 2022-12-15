@@ -45,6 +45,7 @@ def algorithm(matrixalgo, a,b, used=[]):
         resultbelow = findcommondivisor(valueofcurrentcell, theonebelow)
         resultleft = findcommondivisor(valueofcurrentcell, theoneleft)
         used.append([a, b])
+        
         print(a,b)
         if resultabove == True:
             return [a, b-1]

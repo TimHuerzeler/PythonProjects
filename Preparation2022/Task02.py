@@ -12,7 +12,14 @@ s1 = "listen"
 s2 = "silent"
 check(s1, s2)
 
-
+def frequency_char (word):
+    res = { }
+    for c in word:
+        if c in res:
+            res[c] += 1
+        else:
+            res [c] = 1
+    return res
 # Anagram
 def anagram(word1, word2):
     f1 = frequency_char(word1)

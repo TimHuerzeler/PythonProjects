@@ -19,4 +19,12 @@ def trueornot():
             print('{} is odd.'.format(num))
 
 if __name__ == "__main__":
-    trueornot()
+    # trueornot()
+    failed = 0
+    print(failed)
+    while 1==1:
+        print('start')
+        failed = failed + 1
+        print(failed)
+        if failed == 10:
+            quit()

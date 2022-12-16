@@ -25,7 +25,7 @@ def findcommondivisor(a,b):
     else:
         return False
 
-def algorithm(matrixalgo, a, b, used=[], failedused=[], counter=[], results=[], failed=[]):
+def algorithm(matrixalgo, a, b, used=[], failedused=[], counter=[], results=[], failedresults=[], failed=[]):
 #     get the input
 #     try the one above
 #     try the one to the right
@@ -34,12 +34,28 @@ def algorithm(matrixalgo, a, b, used=[], failedused=[], counter=[], results=[], 
 #     return the value of the one that worked
 #     return the location of the one that worked
     valueofcurrentcell = int(matrixalgo[a, b])
+    print('counter value', counter)
     counter.append(1)
-    if [a, b] not in used:
-        theoneabove = int(matrixalgo[a-1, b])
-        theoneright = int(matrixalgo[a, b+1])
-        theonebelow = int(matrixalgo[a+1, b])
-        theoneleft = int(matrixalgo[a, b-1])
+    if [a, b] not in used or len(counter) == 1:
+        theoneabove = 0
+        theoneright = 0
+        theonebelow = 0
+        theoneleft = 0
+        if a == -1:
+            print('failed cause of a-1')
+            quit()
+        if b == -1:
+            print('failed cause of b-1')
+            quit()
+
+        if a != 0:
+            theoneabove = int(matrixalgo[a-1, b])
+        if b != 7:
+            theoneright = int(matrixalgo[a, b+1])
+        if a != 7:
+            theonebelow = int(matrixalgo[a+1, b])
+        if b != 0:
+            theoneleft = int(matrixalgo[a, b-1])
 
         resultabove = findcommondivisor(valueofcurrentcell, theoneabove)
         if [a, b] in used:
@@ -57,7 +73,11 @@ def algorithm(matrixalgo, a, b, used=[], failedused=[], counter=[], results=[], 
             used = used[-2]
         used.append([a, b])
         results.append([resultabove,resultright,resultbelow,resultleft])
-        counter.clear()
+        if len(counter) != 1:
+            counter.clear()
+            if len(counter) >= 3:
+                print('quite becuase of counter len being', len(counter))
+                quit()
         print(a,b)
 
         if resultabove == True:
@@ -69,34 +89,52 @@ def algorithm(matrixalgo, a, b, used=[], failedused=[], counter=[], results=[], 
         elif resultleft == True:
             return [a, b - 1]
 
-    if len(counter) == 1:
+    if len(counter) == 2:
         resultabove = (results[-1])[0]
         resultright = (results[-1])[1]
         resultbelow = (results[-1])[2]
         resultleft = (results[-1])[3]
+        theoneabove = 0
+        theoneright = 0
+        theonebelow = 0
+        theoneleft = 0
         a = (used[-2])[0]
         b = (used[-2])[1]
-        i = ((results[-1]).index(True))+1
+        if True in (results[-1]):
+            i = ((results[-1]).index(True))+1
+        else:
+            if True in (results[-2]):
+                i = ((results[-2]).index(True))+1
+            else:
+                print('reached end of code cause idiot')
+                quit()
+
 
         if i==0:
-            theoneabove = int(matrixalgo[a - 1, b])
+            if a != 0:
+                theoneabove = int(matrixalgo[a - 1, b])
             resultabove = findcommondivisor(valueofcurrentcell, theoneabove)
         if i == 1:
-            theoneright = int(matrixalgo[a, b + 1])
+            if b != 7:
+                theoneright = int(matrixalgo[a, b + 1])
             resultright = findcommondivisor(valueofcurrentcell, theoneright)
         if i == 2:
-            theonebelow = int(matrixalgo[a + 1, b])
+            if a != 7:
+                theonebelow = int(matrixalgo[a + 1, b])
             resultbelow = findcommondivisor(valueofcurrentcell, theonebelow)
         if i == 3:
-            theoneleft = int(matrixalgo[a, b - 1])
+            if b != 0:
+                theoneleft = int(matrixalgo[a, b - 1])
             resultleft = findcommondivisor(valueofcurrentcell, theoneleft)
         if i == 4:
-            theoneabove = int(matrixalgo[a - 1, b])
+            if a != 0:
+                theoneabove = int(matrixalgo[a - 1, b])
             resultabove = findcommondivisor(valueofcurrentcell, theoneabove)
 
         failedused.append([a, b])
+        failedresults.append([resultabove, resultright, resultbelow, resultleft])
         counter.clear()
-        print(failedused)
+        print('used when failed', failedused)
 
         if resultabove == True:
             return [a - 1, b]
@@ -111,6 +149,7 @@ def algorithm(matrixalgo, a, b, used=[], failedused=[], counter=[], results=[], 
             quit()
     else:
         failed.append(1)
+        counter.append(1)
         if len(failed) == 10:
             quit()
         return [5, 5]

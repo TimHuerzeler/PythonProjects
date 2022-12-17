@@ -2,64 +2,153 @@
 #Date: 06.10.2022
 import numpy as np
 
-class AlienfindShip:
-    def __init__(self, beginning, ending):
-        self.beginning = beginning
-        self.ending = ending
 
-    def loadtext(self):
-        search_text1 = "X"
-        search_text2 = "Y"
-        replace_text = "1"
-        with open(r'et.txt', 'r') as file:
-            data = file.read()
-            data = data.replace(search_text1, replace_text)
-            data = data.replace(search_text2, replace_text)
-        with open(r'et1.txt', 'w') as file:
-            file.write(data)
-        returnmatrix = np.loadtxt('et1.txt', usecols=range(8))
-        return returnmatrix
+def get_position(matrix, value):
+    location = np.where(matrix == value)
+    return location[0]
 
-    def findcommondivisor(self,a,b):
-        n = 0
-        for i in range(1, min(a, b) + 1):
-            if a % i == b % i == 0:
-                n += 1
-        if n>1:
-            return True
-        else:
-            return False
+def loadtext(textfile,search_txt1,search_txt2,replace_txt):
+    # search_txt1 = 'X'
+    # search_txt2 = 'Y'
+    # replace_txt = '1'
+    with open(textfile, 'r') as infile, open('et1.txt', 'w') as outfile:
+        data = infile.read()
+        data = data.replace(search_txt1, replace_txt)
+        data = data.replace(search_txt2, replace_txt)
+        outfile.write(data)
+    matrix = np.loadtxt('et1.txt', usecols=range(8))
+    # with open(textfile, 'r') as f_in:
+    #     my_list = [line for line in f_in]
+    #     startlocation = get_position(my_list, search_txt1)
+    #     endlocation = get_position(my_list, search_txt2)
+    # print(startlocation)
+    # print(endlocation)
+    return matrix
 
-    def algorithm(self,a,b):
-        beginning = a
-        end = b
-        happened = []
-        matrix = AlienfindShip.loadtext('car')
-        happened.append("orange")
+def findcommondivisor(a,b):
+    n = 0
+    for i in range(1, min(a, b) + 1):
+        if a % i == b % i == 0:
+            n += 1
+    if n>1:
+        return True
+    else:
+        return False
 
-    def pathfinder(self, matrix, start, end):
-        n = False
-        while n != True:
-            returndvalue = algorithm(matrix, startx, starty)
-            if not returndvalue:
-                startx = 5
-                starty = 5
-                continue
-            if returndvalue == [endx, endy]:
-                n = True
-            startx = returndvalue[0]
-            starty = returndvalue[1]
+def algo(matrix,x,y,used = []):
+    uabove=1
+    uright=1
+    ubelow=1
 
-    def main(self):
-        start = (AlienfindShip.loadtext('car'))[5, 5]
-        finish = (AlienfindShip.loadtext('car'))[2, 2]
-        print('This is the startingpoint value', start)
-        print('This is the startingpoint location X=5 & Y=5')
+    current = int(matrix[x,y])
+    print(current)
+    print(used)
+
+    if x == 2 and y == 2:
+        print('succesfull')
+        quit()
+
+    if y == 0: left = 0
+    else: left = int(matrix[x,y-1])
+    if x == 7: below = 0
+    else: below = int(matrix[x+1,y])
+    if y == 7: right = 0
+    else: right = int(matrix[x,y+1])
+    if x == 0: above = 0
+    else: above = int(matrix[x-1,y])
+
+    if current == 29:
+        print('Hello')
+
+    if current != 2:
+        if [above] == used[-1]:
+            uabove = 0
+        if [left] == used[-1]:
+            uleft = 0
+        if [below] == used[-1]:
+            ubelow = 0
+
+    if ([current] in used):
+        if current == 2:
+            return
+        if used[-1] == [above]:
+            uabove=0
+        if used[-1] == [right]:
+            uright=0
+        if used[-1] == [below]:
+            ubelow=0
+        if used.count([above]) >= 15:
+            uabove = 0
+            # uright = 0
+            # ubelow = 0
+        if used.count([right]) >= 15:
+            uabove = 0
+            uright = 0
+            # ubelow = 0
+        if used.count([below]) >= 15:
+            uabove = 0
+            uright = 0
+            ubelow = 0
+        print('help')
+
+    if (findcommondivisor(current,above)) == True and uabove == 1:
+        x=x-1
+        y=y
+        used.append([current])
+        algo(matrix,x,y)
+        return
+    if (findcommondivisor(current,right)) == True and uright == 1:
+        x=x
+        y=y+1
+        used.append([current])
+        algo(matrix,x,y)
+        return
+    if (findcommondivisor(current,below)) == True and ubelow == 1:
+        x=x+1
+        y=y
+        used.append([current])
+        algo(matrix,x,y)
+        return
+    if (findcommondivisor(current,left)) == True:
+        x=x
+        y=y-1
+        used.append([current])
+        algo(matrix,x,y)
+        return
+    # else:
+    #     if (findcommondivisor(current, above)) == True:
+    #         x = x - 1
+    #         y = y
+    #         used.append([current])
+    #         algo(matrix, x, y)
+    #         return
+    #     if (findcommondivisor(current, right)) == True:
+    #         x = x
+    #         y = y + 1
+    #         used.append([current])
+    #         algo(matrix, x, y)
+    #         return
+    #     if (findcommondivisor(current, below)) == True:
+    #         x = x + 1
+    #         y = y
+    #         used.append([current])
+    #         algo(matrix, x, y)
+    #         return
+    #     if (findcommondivisor(current, left)) == True:
+    #         x = x
+    #         y = y - 1
+    #         used.append([current])
+    #         algo(matrix, x, y)
+    #         return
+
+
 
 def main():
-    AlienfindShip.algorithm('car',1,1)
-    AlienfindShip.main('car')
-
+    start = [5,5]
+    end = [2,2]
+    matrix = loadtext('et.txt','X','Y','2')
+    print(matrix)
+    algo(matrix,5,5)
 
 
 if __name__ == "__main__":

@@ -16,17 +16,16 @@
 
 import numpy as np
 
-def main():
-    search_text1 = "X"
-    search_text2 = "Y"
-    replace_text = "1"
-    with open(r'et.txt', 'r') as file:
-        data = file.read()
-        data = data.replace(search_text1, replace_text)
-        data = data.replace(search_text2, replace_text)
-    with open(r'et1.txt', 'w') as file:
-        file.write(data)
+def loadtext(textfile,search_txt1,search_txt2,replace_txt):
+    with open(textfile, 'r') as infile, open('et_temp.txt', 'w') as outfile:
+        data = infile.read()
+        data = data.replace(search_txt1, replace_txt)
+        data = data.replace(search_txt2, replace_txt)
+        outfile.write(data)
     matrix = np.loadtxt('et1.txt', usecols=range(8))
+    return matrix
+def main():
+    matrix = loadtext('et.txt','X','Y','1')
     print(matrix)
 
 

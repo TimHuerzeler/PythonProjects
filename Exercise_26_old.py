@@ -11,9 +11,9 @@ def loadtext():
         data = file.read()
         data = data.replace(search_text1, replace_text)
         data = data.replace(search_text2, replace_text)
-    with open(r'et1.txt', 'w') as file:
+    with open(r'et_temp.txt', 'w') as file:
         file.write(data)
-    returnmatrix = np.loadtxt('et1.txt', usecols=range(8))
+    returnmatrix = np.loadtxt('et_temp.txt', usecols=range(8))
     return returnmatrix
 def findcommondivisor(a,b):
     n = 0

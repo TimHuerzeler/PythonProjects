@@ -22,7 +22,7 @@ def loadtext(textfile,search_txt1,search_txt2,replace_txt):
         data = data.replace(search_txt1, replace_txt)
         data = data.replace(search_txt2, replace_txt)
         outfile.write(data)
-    matrix = np.loadtxt('et1.txt', usecols=range(8))
+    matrix = np.loadtxt('et_temp.txt', usecols=range(8))
     return matrix
 def main():
     matrix = loadtext('et.txt','X','Y','1')
